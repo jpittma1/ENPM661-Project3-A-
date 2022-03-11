@@ -9,7 +9,7 @@ UMD-CP PMRO. Spring 2022
 
 #********************************************
 #Requires the following in same folder to run:
-# 1) Python code: "functions.py", "Node.py", and "obstacles.py" and "Dijkstra-pathplanning-Jerry-Pittman.py"
+# 1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
 
 #Generates the following outputs:
 # 2) Initial Map Image : "initial_map.png"
