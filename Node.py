@@ -1,3 +1,6 @@
+#Maitreya Ravindra Kulkarni, UID: 117506075
+#jpittma1@umd.edu and mkulk98@umd.edu
+
 import numpy as np
 import math
 
