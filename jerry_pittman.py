@@ -3,7 +3,8 @@
 #ENPM661 Spring 2022
 #Section 0101
 #Jerry Pittman, Jr. UID: 117707120
-#jpittma1@umd.edu
+#Maitreya Ravindra Kulkarni, UID: 117506075
+#jpittma1@umd.edu and mkulk98@umd.edu 
 #Project #3 Phase 1
 
 
@@ -13,18 +14,18 @@ from obstacles import *
 
 
 '''--User input for initial and goal State--'''
-# Xi,Xg, rigid_body, step_size, theta=GetInitialStates()
-# clearance = rigid_body[0]       #overrides default (10) in obstacles.py
-# robot_radius = rigid_body[1]    #overrides default (5) in obstacles.py
+Xi,Xg, rigid_body, step_size, theta=GetInitialStates()
+clearance = rigid_body[0]       #overrides default (10) in obstacles.py
+robot_radius = rigid_body[1]    #overrides default (5) in obstacles.py
 
 ####--for testing without user input--####
-Xi = [0,0,0] #starts at Origin
-# Xg=[380, 20] #above hexagon
-# Xg=[20, 20] #above hexagon
-Xg=[200, 200] #above hexagon
-# Xg=[390,240] #behind circle
-step_size = 5
-theta = 30
+# Xi = [0,0,0] #starts at Origin
+# # Xg=[380, 20] #above hexagon
+# # Xg=[20, 20] #above hexagon
+# Xg=[200, 200] #above hexagon
+# # Xg=[390,240] #behind circle
+# step_size = 5
+# theta = 30
 ################################
 
 print("Initial State is ", Xi) #(x, y, theta_s)
@@ -64,11 +65,8 @@ ClosedList=np.array([[Node([i,j],None, None, math.inf) for j in range(250)] for 
 
 reachedGoal = False
 
-
-# theta_threshold=math.radians(30)    #Python defaults to Radians
 # action_set=straight, CCW60, CCW30, CW30, CW60
 #x, y, theta
-moves_cost = {'N':1, 'NE':1.4, 'E':1, 'SE':1.4, 'S':1, 'SW':1.4, 'W':1, 'NW':1.4}
 
 print("Initial and Goal points are valid...Generating map...")
 '''**Visualization Code**
@@ -123,9 +121,6 @@ while not (OpenList.empty() and reachedGoal):
     space = updateNodesOnMap(space, curr_node.getState(), [0, 255, 0])
     video.write(space)
     
-    #Save Directional Moves in x and y dictionaries-----
-    # moves_x = {'N':i, 'NE':i+1, 'E':i+1, 'SE':i+1, 'S':i, 'SW':i-1, 'W':i-1, 'NW':i-1}
-    # moves_y = {'N':j+1, 'NE':j+1, 'E':j, 'SE':j-1, 'S':j-1, 'SW':j-1, 'W':j, 'NW':j+1}
     
     reachedGoal =compare2Goal(curr_node.getState(),Xg, goal_threshold)
 
