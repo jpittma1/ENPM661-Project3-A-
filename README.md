@@ -3,8 +3,11 @@ A* implementation for a mobile robot for Spring 2022 ENPM661 course at UMD-CP
 
 UMD-CP PMRO. Spring 2022
 #Section 0101
+
 #Jerry Pittman, Jr. UID: 117707120
+
 #Maitreya Ravindra Kulkarni, UID: 117506075
+
 #jpittma1@umd.edu and mkulk98@umd.edu 
 #Project 3: Phase 1 (holonomic constraints only)
 
