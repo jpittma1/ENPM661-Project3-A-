@@ -3,7 +3,8 @@
 #ENPM673 Spring 2022
 #Section 0101
 #Jerry Pittman, Jr. UID: 117707120
-#jpittma1@umd.edu
+#Maitreya Ravindra Kulkarni, UID: 117506075
+#jpittma1@umd.edu and mkulk98@umd.edu 
 #Project #3 Functions
 
 import copy
