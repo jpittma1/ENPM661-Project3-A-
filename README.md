@@ -18,7 +18,7 @@ UMD-CP PMRO. Spring 2022
 #Generates the following outputs:
 # 2) Initial Map Image : "initial_map.png"
 # 3) Final Map Image (with path): "Final_map.png"
-# 4) Video for phase 1: "project3-jerry-pittman.avi"
+# 4) Video for phase 1: "project3_jerry_pittman.avi"
 #********************************************
 
 Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math, copy, timeit, queue
