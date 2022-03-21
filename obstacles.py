@@ -5,14 +5,15 @@
 #Jerry Pittman, Jr. UID: 117707120
 #Maitreya Ravindra Kulkarni, UID: 117506075
 #jpittma1@umd.edu and mkulk98@umd.edu 
-#Project #3 Obstacles
+#Project #3 Phase 1
+# Obstacles
 
 import numpy as np
 from numpy import linalg as LA
 
 sizex = 400
 sizey = 250
-robot_radius = 10   #increased from 0 to 10
+robot_radius = 10   #increased from 0 (Project 2) to 10 (Project 3 Phase 2)
 clearance = 5
 total_clearance = robot_radius + clearance
 
@@ -45,7 +46,6 @@ boomerang_pts_top=np.array([[right_x, right_y],
 boomerang_pts_bottom=np.array([[left_x,left_y],
                         [triangle_bottom_x,triangle_bottom_y],
                         [right_x, right_y]], np.int32)
-
 
 #circle values from map
 circle_diameter = 80 
