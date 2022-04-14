@@ -11,18 +11,6 @@ UMD-CP PMRO. Spring 2022
 #jpittma1@umd.edu and mkulk98@umd.edu 
 
 
-# Project 3: Phase 1 (non-holonomic constraints only)
-
-#********************************************
-#Requires the following in same folder to run:
-# 1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
-
-#Generates the following outputs:
-# 2) Initial Map Image : "initial_map.png"
-# 3) Final Map Image (with path): "Final_map.png"
-# 4) Video for phase 1: "project3_jerry_pittman.avi"
-#********************************************
-
 # Phase 2 (holonomic constraints only)
 #********************************************
 #Requires the following in same folder to run:
@@ -32,7 +20,6 @@ UMD-CP PMRO. Spring 2022
 # 2) Initial Map Image : "initial_map.png"
 # 3) Final Map Image (with path): "Final_map.png"
 # 4) Video for phase 2: "project3_phase2_jerry_pittman.avi"
-
 #********************************************
 
 
