@@ -12,17 +12,17 @@ UMD-CP PMRO. Spring 2022
 # Project 3: Phase 1 (non-holonomic constraints only)
 
 #********************************************
-#Requires the following in same folder to run:
-# 1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
+# Requires the following in same folder to run:
+#1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
 
-#Generates the following outputs:
-# 2) Initial Map Image : "initial_map.png"
-# 3) Final Map Image (with path): "Final_map.png"
-# 4) Video for phase 1: "project3_jerry_pittman.avi"
+# Generates the following outputs:
+#1) Initial Map Image : "initial_map.png"
+#2) Final Map Image (with path): "Final_map.png"
+#3) Video for phase 1: "project3_jerry_pittman.avi"
 #********************************************
 
 Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math, copy, timeit, queue
 
 Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
 
-Video GDrive link: https://drive.google.com/file/d/1mVRywEdmyglWI77xN5PO4NGf_e3jIXUo/view?usp=sharing
+Video1 GDrive link: https://drive.google.com/file/d/1mVRywEdmyglWI77xN5PO4NGf_e3jIXUo/view?usp=sharing

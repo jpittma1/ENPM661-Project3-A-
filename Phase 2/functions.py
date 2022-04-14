@@ -5,7 +5,7 @@
 #Jerry Pittman, Jr. UID: 117707120
 #Maitreya Ravindra Kulkarni, UID: 117506075
 #jpittma1@umd.edu and mkulk98@umd.edu 
-#Project #3 Phase 1
+#Project #3 Phase 2
 # Functions
 
 import copy
