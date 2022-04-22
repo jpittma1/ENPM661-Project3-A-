@@ -4,18 +4,22 @@
 #Section 0101
 #Jerry Pittman, Jr. UID: 117707120
 #Maitreya Ravindra Kulkarni, UID: 117506075
-#jpittma1@umd.edu and mkulk98@umd.edu 
+#jpittma1@umd.edu and mkulk98@umd.edu
+#Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
 #Project #3 Phase 2
 
+from ctypes.wintypes import ULARGE_INTEGER
 from Node import *
 from functions import *
 from obstacles import *
 
 
 '''--User input for initial and goal State--'''
-Xi,Xg, rigid_body, step_size, theta=GetInitialStates()
-clearance = rigid_body[0]       #overrides default (10) in obstacles.py
-robot_radius = rigid_body[1]    #overrides default (5) in obstacles.py
+Xi,Xg, wheel_RPM, rigid_body = GetInitialStates()
+RPM1 = wheel_RPM[0]
+RPM2 = wheel_RPM[0]
+clearance = rigid_body       #overrides default (10) in obstacles.py
+# robot_radius = 18   #set in obstacles.py
 
 ####--for testing without user input--####
 # Xi = [0,0,0] #starts at Origin
@@ -24,16 +28,18 @@ robot_radius = rigid_body[1]    #overrides default (5) in obstacles.py
 # Xg=[200, 20] #below hexagon
 # Xg=[20, 100] #left hexagon
 # Xg=[390,240] #behind circle
-# step_size = 5
-# theta = 30
+# RPM1 = 5
+# RPM2 = 5
+# clearance = 5
 ###########################################
 
 # # Xg=[380, 20] #above hexagon
 # # Xg=[20, 20] #above hexagon
 # Xg=[200, 200] #above hexagon
 # # Xg=[390,240] #behind circle
-# step_size = 5
-# theta = 30
+# RPM1 = 5
+# RPM2 = 5
+# clearance = 5
 ################################
 
 
@@ -117,6 +123,26 @@ VisitedNodes[int(Xi[0]*2)][int(Xi[1]*2)][int(theta_s%30)]=1
 ###########A*-star Algorithm While Loop#############
 '''Conduct A*-star algorithm to find path between 
 initial and goal node avoiding obstacles'''
+
+###----provided by Instructor----####
+actions=[[5,5], [10,10],[5,0],[0,5],[5,10],[10,5]]
+
+fig, ax = plt.subplots()
+
+#Print values of k
+for action in actions:
+    k=cost(Xi[0],Xi[1],Xi[2], action[0],action[1])    # (0,0,45) hypothetical start configuration, this dosn't matter for calucating the edges'costs
+    #k = [X,Yn, Thetan, D]
+    # Xn, Yn, Thetan: End point coordinates
+    print(k[3])
+
+#Plot final path curves
+for action in actions:
+    X1= plot_curve(0,0,45, action[0],action[1]) # (0,0,45) hypothetical start configuration
+    for action in actions:
+        X2=plot_curve(X1[0],X1[1],X1[2], action[0],action[1])
+
+###----provided by Instructor----####
 
 start = timeit.default_timer()
 print("Commencing A-star Search.......")

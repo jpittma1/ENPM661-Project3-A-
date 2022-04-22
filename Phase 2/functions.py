@@ -27,14 +27,12 @@ def GetInitialStates():
     initial=[int(x) for x in input().split()]
     print("Enter goal node (Xg, Yg), separated by spaces: ")
     final=[int(x) for x in input().split()]
-    print("Enter clearance and robot radius Default=(5, 10), separated by spaces: ")
-    robot=[int(x) for x in input().split()]
-    print("Enter Step size of movement in units (1-10) Default=5: ")
-    step_size=int(input())
-    print("Enter Theta (angle between movements) Default=30: ")
-    theta=int(input())
+    print("Enter Wheel RPMs (UL, UR), separated by spaces: ")
+    wheel_RPM=[int(x) for x in input().split()]
+    print("Enter clearance, Default=5: ")
+    clear=int(input())
     
-    return initial, final, robot, step_size, theta
+    return initial, final, wheel_RPM, clear,
 
 ###########################################
 '''OpenCV/ Visualization Functions'''
@@ -282,3 +280,56 @@ def compare2Goal(now,goal, goal_thresh):
         return True
     else:
         return False
+
+'''Phase 2 Function (provided by instructor)'''
+def cost(Xi,Yi,Thetai,UL,UR):
+    t = 0
+    r = 0.038
+    L = 0.354
+    dt = 0.1
+    Xn=Xi
+    Yn=Yi
+    Thetan = 3.14 * Thetai / 180
+
+
+# Xi, Yi,Thetai: Input point's coordinates
+# Xs, Ys: Start point coordinates for plot function
+# Xn, Yn, Thetan: End point coordintes
+    D=0
+    while t<1:
+        t = t + dt
+        Xs = Xn
+        Ys = Yn
+        #---Differential drive equations---
+        Delta_Xn = 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        Delta_Yn = 0.5*r * (UL + UR) * math.sin(Thetan) * dt
+        Thetan += (r / L) * (UR - UL) * dt
+        D=D+ math.sqrt(math.pow((0.5*r * (UL + UR) * math.cos(Thetan) * dt),2)+math.pow((0.5*r * (UL + UR) * math.sin(Thetan) * dt),2))
+    Thetan = 180 * (Thetan) / 3.14
+    return Xn, Yn, Thetan, D
+
+def plot_curve(Xi,Yi,Thetai,UL,UR):
+    t = 0
+    r = 0.038
+    L = 0.354
+    dt = 0.1
+    Xn=Xi
+    Yn=Yi
+    Thetan = 3.14 * Thetai / 180
+
+
+# Xi, Yi,Thetai: Input point's coordinates
+# Xs, Ys: Start point coordinates for plot function
+# Xn, Yn, Thetan: End point coordintes
+    D=0
+    while t<1:
+        t = t + dt
+        Xs = Xn
+        Ys = Yn
+        Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
+        Thetan += (r / L) * (UR - UL) * dt
+        plt.plot([Xs, Xn], [Ys, Yn], color="blue")
+        
+    Thetan = 180 * (Thetan) / 3.14
+    return Xn, Yn, Thetan, D

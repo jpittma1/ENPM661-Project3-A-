@@ -13,7 +13,7 @@ from numpy import linalg as LA
 
 sizex = 400
 sizey = 250
-robot_radius = 10   #increased from 0 (Project 2) to 10 (Project 3 Phase 2)
+robot_radius = 18   #178mm
 clearance = 5
 total_clearance = robot_radius + clearance
 
