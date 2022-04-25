@@ -1,7 +1,7 @@
 # ENPM661-Project3-A*
 A* implementation for a mobile robot for Spring 2022 ENPM661 course at UMD-CP
 # Phase 1: holonomic constraints
-# Phase 2: Add non-holonomic constraints (differential Drive of Turtlebot) and simulate in Gazebo
+# Phase 2: Add non-holonomic constraints (differential Drive of Turtlebot) and simulate in Gazebo (Part 2)
 
 UMD-CP PMRO. Spring 2022
 #Section 0101
@@ -11,21 +11,15 @@ UMD-CP PMRO. Spring 2022
 #jpittma1@umd.edu and mkulk98@umd.edu 
 
 
-# Phase 2 (non-holonomic constraints only)
+# Phase 2 Part1 (non-holonomic constraints only)
 #********************************************
 # Requires the following in same folder to run:
 #1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
 
 to run: "python3 jerry_pittman.py"
 
-#Generates the following outputs:
-#1) Initial Map Image : "initial_map.png"
-#2) Final Map Image (with path): "Final_map.png"
-#3) Video for phase 2: "project3_phase2_jerry_pittman.avi"
-#********************************************
 
-
-Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math, copy, timeit, queue
+Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math
 
 Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
 
