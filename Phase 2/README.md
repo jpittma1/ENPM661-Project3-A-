@@ -16,6 +16,8 @@ UMD-CP PMRO. Spring 2022
 # Requires the following in same folder to run:
 #1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
 
+to run: "python3 jerry_pittman.py"
+
 #Generates the following outputs:
 #1) Initial Map Image : "initial_map.png"
 #2) Final Map Image (with path): "Final_map.png"

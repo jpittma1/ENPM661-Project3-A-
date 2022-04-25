@@ -4,236 +4,223 @@
 #Section 0101
 #Jerry Pittman, Jr. UID: 117707120
 #Maitreya Ravindra Kulkarni, UID: 117506075
-#jpittma1@umd.edu and mkulk98@umd.edu
-#Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
+#jpittma1@umd.edu and mkulk98@umd.edu 
 #Project #3 Phase 2
 
-from ctypes.wintypes import ULARGE_INTEGER
-from Node import *
-from functions import *
 from obstacles import *
+from functions import *
+import numpy as np
+import cv2
+from Node import *
+import matplotlib.pyplot as plt
 
 
-'''--User input for initial and goal State--'''
-Xi,Xg, wheel_RPM, rigid_body = GetInitialStates()
-RPM1 = wheel_RPM[0]
-RPM2 = wheel_RPM[0]
-clearance = rigid_body       #overrides default (10) in obstacles.py
-# robot_radius = 18   #set in obstacles.py
+import math
+import queue
 
-####--for testing without user input--####
-# Xi = [0,0,0] #starts at Origin
-# Xg=[380, 20] #above hexagon
-# Xg=[20, 20] #left hexagon
-# Xg=[200, 20] #below hexagon
-# Xg=[20, 100] #left hexagon
-# Xg=[390,240] #behind circle
-# RPM1 = 5
-# RPM2 = 5
-# clearance = 5
-###########################################
+import csv
 
-# # Xg=[380, 20] #above hexagon
-# # Xg=[20, 20] #above hexagon
-# Xg=[200, 200] #above hexagon
-# # Xg=[390,240] #behind circle
-# RPM1 = 5
-# RPM2 = 5
-# clearance = 5
-################################
+wheel_radius = 0.038
+wheel_distance = 0.354
 
 
-print("Initial State is ", Xi) #(x, y, theta_s)
-print("Goal state is: ", Xg)
+def halfRound(n):
+    val = round(2*n)/2
+    if (val == 10):
+      val -= 0.5
+    return val
 
-#######CHECK IF ENTERED VALUES ARE VALID###########
-if isInObstacleSpace(Xi[0],Xi[1]):
-    print("Initial state is in an obstacle or off the map, please provide new valid initial state")
-    exit()
-    
-if isInObstacleSpace(Xg[0],Xg[1]):
-    print("Goal state is in an obstacle or off the map, please provide new valid goal state")
-    exit()
 
-theta_s = Xi[2]
+def toRadian(angle):
+    return np.pi * angle / 180
+def toDegree(angle):
+    return 180 * angle / np.pi
 
-#--Goal Thresholds---
-goal_threshold=int(1.5*robot_radius)
-threshold=0.5
 
-####################INITIALIZE NODEs AND MAP###############
-'''Initialize tuple and store in OpenList priority queue.
-       [0,1]=coordinate values (x,y) from user input
-       [2]=index of node; initially set to 0
-       [3]=parent node index; initially set to -1
-       [4]= cost to come; initially set to 0
-       [5]=total cost'''
-
-#-------Class object and Priority Queue Initialization--------
-OpenList = PriorityQueue()  
-start_node = Node(Xi, None, None, 0)
-OpenList.put((start_node.getCost(), start_node))
-
-reachedGoal = False
-
-# action_set=straight, CCW60, CCW30, CW30, CW60
-#x, y, theta
-
-print("Initial and Goal points are valid...Generating map...")
-'''**Visualization Code**
-    Map Background=Black
-    Start=Red
-    Goal= Red
-    Obstacles=Yellow
-    Completed Nodes=Green
-    Path=white
-'''
-map_size = [250, 400] 
-map_y, map_x = map_size
-videoname=('project3-phase2-jerry-pittman')
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-video = cv2.VideoWriter(str(videoname)+".avi",  fourcc, 300, (map_x, map_y))
-
-space = np.zeros([map_size[0], map_size[1], 3], dtype=np.uint8) 
-# print("space shape", space.shape)
-'''Plot start and goal Nodes on Map--Red'''
-space = updateNodesOnMap(space, start_node, [0,0,255])
-space = plotPointOnMap(space, Xi, [0,0,255])
-space = plotPointOnMap(space, Xg, [0,0,255])
-
-# space = plotGoalThresholdOnMap(space,Xg,goal_threshold,[0,0,255])   #Plot goal threshold circle
-# # cv2.circle(space,(Xg[0],Xg[1]),goal_threshold, (0,0,255), 2) 
-
-'''Plot Obstacles on Map--Yellow'''
-space = addObstacles2Map(space)
-
-cv2.imwrite('Initial_map.jpg', space)
-print("Initial map created named 'initial_map.jpg' ")
-
-cv2.imshow('Initial_map', space)
-
-########----Determine if Duplicate Node Matrix "V"----###########
-'''For finding duplicate nodes, 
-Initially set all to zero (0)
-Take node visited, round, then set the corresponding V[i][j][k]=1'''
-VisitedNodes = np.array([[[0 for k in range(int(360/theta))] for j in range(int(map_y/threshold))] for i in range(int(map_x/threshold))])
-
-#Make initial/Starting Node as visited
-VisitedNodes[int(Xi[0]*2)][int(Xi[1]*2)][int(theta_s%30)]=1
-###########A*-star Algorithm While Loop#############
-'''Conduct A*-star algorithm to find path between 
-initial and goal node avoiding obstacles'''
-
-###----provided by Instructor----####
-actions=[[5,5], [10,10],[5,0],[0,5],[5,10],[10,5]]
-
-fig, ax = plt.subplots()
-
-#Print values of k
-for action in actions:
-    k=cost(Xi[0],Xi[1],Xi[2], action[0],action[1])    # (0,0,45) hypothetical start configuration, this dosn't matter for calucating the edges'costs
-    #k = [X,Yn, Thetan, D]
-    # Xn, Yn, Thetan: End point coordinates
-    print(k[3])
-
-#Plot final path curves
-for action in actions:
-    X1= plot_curve(0,0,45, action[0],action[1]) # (0,0,45) hypothetical start configuration
-    for action in actions:
-        X2=plot_curve(X1[0],X1[1],X1[2], action[0],action[1])
-
-###----provided by Instructor----####
-
-start = timeit.default_timer()
-print("Commencing A-star Search.......")
-
-while not (OpenList.empty()):
-# while not (OpenList.empty() and reachedGoal):
-    
-    curr_node = OpenList.get()[1]
-    i, j, direction = curr_node.getState()
-    # print("curr_node is: ",curr_node)
-    # print("current node (x,y) is: (", i, ", ",j,")")
-    # print("Orientation is: ", direction)
-   
-    space = updateNodesOnMap(space, curr_node, [0, 255, 0])
-    # space = updateNodesOnMap(space, curr_node.getState(), [0, 255, 0])
-    video.write(space)
-    
-    reachedGoal =compare2Goal(curr_node.getState(),Xg, goal_threshold)
-
-    if reachedGoal:
-        print("Goal Reached!!")
-        print("Total cost of path is ", curr_node.getCost())
-        # print("Total cost of path is ", curr_node.getCostTotal())
-
-        '''Backtracking Function'''
-        moves_path, path = curr_node.getFullPath()
-
-        # print("Backtracked Moves is ", moves_path)
-        # print("Backtracked Node path is ", path)
-        
-        for node in path:  #Make white Node pathway on map
-                # pos = node.getState()
-
-                space = updateNodesOnMap(space, node, [255, 255, 255]) #White
-                cv2.imshow('Map',space)
-                video.write(space)
-        
-        #Video ends abruptly at goal, want to have goal shown for a little longer
-        for i in range(300):       
-            video.write(space)
-
-    
+def checkGoalReached(current_node, goal_state, thresh_radius):
+    current_state = current_node.getState()
+    radius_sq = np.square(current_state[0] - goal_state[0]) + np.square(current_state[1] - goal_state[1])
+    if radius_sq < thresh_radius**2:
+        return True
     else:
-        X_prime=possibleMoves(curr_node, step_size,theta) #array of new Node Class Objects
-        # print("possible directions of current node are: ", X_prime)
-        # parent_cost=curr_node.getCost()    #current cost to come
-        # cost_to_come = parent_cost + step_size  #Cost2Come increase by step_size
-        
-        '''Iterate through all Possible Actions/Directions'''
-        for move in X_prime:
-            # print("move is: ", move.getMove())
-            move_state=move.getState()
-            '''Verify not Visited; if so, update'''
-            if VisitedNodes[int(round(move_state[0])*2)][int(round(move_state[1])*2)][int(move_state[2]%30)]== 0:
-                VisitedNodes[int(round(move_state[0])*2)][int(round(move_state[1])*2)][int(move_state[2]%30)]== 1 #Mark as visited
-                
-                '''Q.insert (x'):
-                self.move possibilities=["maxPort","port", "straight", "starboard", "maxStarboard"]
-                cost_to_come "self.cost" updated in possibleMoves function as step_size'''
-                #self.move possibilities=["maxPort","port", "straight", "starboard", "maxStarboard"]
-                total_cost = move.getCost()+ heuristicEuclidean(move_state,Xg)
-                OpenList.put((total_cost, move))    #Update OpenList Queue
-                
-            else: #Node has been visited
-                '''Cost(x') > CostToCome(x) + l(x,u)+CostToGo(x')'''
-                rightHandSide=curr_node.getCost() + step_size + heuristicEuclidean(move,Xg)
-                if move.getCost() > rightHandSide:
-                # if move.getCost() > (curr_node.getcost() + step_size + heuristicEuclidean(move,Xg)):
-                    
-                    '''Update Cost to come'''
-                    cost_to_come = curr_node.getCost() + step_size
-                    
-                    '''Update Total Cost'''
-                    move.cost = cost_to_come+heuristicEuclidean(move_state,Xg)
-                    
-                    '''Update Parent'''
-                    move.parent = curr_node
+        return False
+
+
+def computeHeuristic(current_state, goal_state):
+    cost = 0.0
+    if current_state is not None:
+        cost =  ((current_state[0]-goal_state[0])**2 + (current_state[1]-goal_state[1])**2)**(0.5)
+    return cost
+
+def checkVisited(node, node_array, goal_state, threshold=0.5):
+    result = False
+    node_state = node.getState()
+    x = node_state[0]
+    y = node_state[1]
+    theta = node_state[2]
+    x = int(halfRound(x)/threshold)
+    y = int(halfRound(y)/threshold)
+
+    if (node.getCost() + computeHeuristic(node_state, goal_state) < node_array[x, y, theta]):
+        result = True
+    return result
+
+def getBranches(node, T, w1, w2, obs):
+    actions=[[w1, w1], [w2, w2], [w1, 0], [0, w1], [w1, w2], [w2, w1], [0, w2], [w2, 0]]
+    state = node.getState()
+    branches = []
+
+    for action in actions:
+        new_state, path_array, cost = move(state, action, T, obs)
+        if new_state is not None:
+            branch_node = Node(new_state, node, action, node.getCost() + cost, path_array)
+            branches.append(branch_node)
       
-    if reachedGoal: break
+    return branches
+
+def move(state, action, T, obs):
+    t = 0
+    dt = 0.1
     
-stop = timeit.default_timer()
-print("That algorithm took ", stop-start, " seconds")
+    Xi, Yi, thetai = state
+    thetai = toRadian(thetai)
+
+    wL, wR = action
+
+    Xn = Xi
+    Yn = Yi
+    thetan = thetai
+
+    path_array = []
+    cost = 0.0
+    path_array.append([Xn, Yn])
+    while t<T:
+        t = t + dt
+        dx = 0.5 * wheel_radius * (wL + wR) * math.cos(thetan) * dt
+        dy = 0.5 * wheel_radius * (wL + wR) * math.sin(thetan) * dt
+        Xn += dx
+        Yn += dy
+        thetan += (wheel_radius / wheel_distance) * (wL - wR) * dt
+        cost += math.sqrt(math.pow(dx,2) + math.pow(dy,2))
+        path_array.append([Xn, Yn])
+        
+        if obs.isInObstacleSpace(Xn, Yn):
+            return None, None, None
+
+    thetan = int(toDegree(thetan))
+    if (thetan >= 360):
+        thetan-=360
+    if (thetan <= -360):
+        thetan+=360
+    return [Xn, Yn, thetan] , path_array, cost
+
+def visualize(viz, traversed_nodes, node_path):
+    fig, ax = plt.subplots(figsize = (10, 10))
+    ax.set(xlim=(0, 10), ylim = (0,10))
+    ax = viz.addObstacles2Map(ax)
+    ax.set_aspect("equal")
+    for node in traversed_nodes:
+        xi, yi, _ = node.getState()
+        points = node.getPathArray()
+        if points is not None:
+            for point in points:
+                xn, yn = point
+                ax.plot([xi, xn], [yi, yn], color="blue", linewidth = 0.5 )
+                xi, yi = xn, yn
+            plt.pause(0.000001)
 
 
-cv2.namedWindow("map", cv2.WINDOW_NORMAL)
-cv2.imshow('Final_ map', space)
-cv2.imwrite('Final_map.jpg', space)
-print("Final map created named 'final_map.jpg' ")
+    for node in node_path:
+        xi, yi, _ = node.getState()
+        points = node.getPathArray()
+        if points is not None:
+            for point in points:
+                xn, yn = point
+                ax.plot([xi, xn], [yi, yn], color="red", linewidth = 0.5 )
+                xi, yi = xn, yn  
+            plt.pause(0.0001)
 
-if cv2.waitKey(1) == ord('q'):
-    video.release()
+    plt.show()
+    plt.close()
 
-video.release()
-cv2.destroyAllWindows()
+def astar():
+
+    h,w = 10,10
+    threshold = 0.5
+    start_point = [5,3,0]
+    goal_state = [9,9]
+    w1, w2 = 5, 10
+    nodes = queue.PriorityQueue()
+    init_node = Node(start_point, None, None, 0, None)
+    nodes.put((init_node.getCost(), init_node))
+    traversed_nodes = []
+
+    obs = Obstacle(0.0)
+    viz = Visualization(obs)
+
+    fig, ax = plt.subplots(figsize = (10, 10))
+    ax.set(xlim=(0, 10), ylim = (0,10))
+    ax = viz.addObstacles2Map(ax)
+    ax.set_aspect("equal")
+
+    goal_reached = False
+    node_array = np.array([[[math.inf for k in range(360)] for j in range(int(h/threshold))] for i in range(int(w/threshold))])
+
+    full_path = None
+    goal_reached = False
+    print('Searching for optimal path.....')
+
+
+
+    while (not nodes.empty()):
+        current_node = nodes.get()[1]
+        traversed_nodes.append(current_node)
+
+        if checkGoalReached(current_node, goal_state,1):
+            print('Goal reached')
+            print("The cost of path: ", current_node.getCost())
+            moves, node_path = current_node.getFullPath()
+
+            visualize(viz, traversed_nodes, node_path)
+
+            goal_reached = True
+
+            fp = open('path_points.csv', 'w')
+            fn = open('path_nodes.csv', 'w')
+            fv = open('vel_points.csv', 'w')
+            writer_p = csv.writer(fp)
+            writer_n = csv.writer(fn)
+            writer_v = csv.writer(fv)
+
+            for move in moves:
+                writer_v.writerow(move)
+
+            for node in node_path:
+                xi, yi, _ = node.getState()
+                writer_n.writerow([xi, yi])
+
+                points = node.getPathArray()
+                if points is not None:
+                    for point in points:
+                        xn, yn = point
+                        row = [xn, yn]
+                        writer_p.writerow(row)
+                        xi, yi = xn, yn        
+            fp.close()
+            fv.close()
+            fn.close()
+        
+
+        else:
+            branches = getBranches(current_node, 1, w1, w2, obs)
+            for branch_node in branches:
+                branch_state = branch_node.getState()
+                if checkVisited(branch_node, node_array, goal_state, threshold=0.5):
+                    node_array[int(halfRound(branch_state[0])/threshold), int(halfRound(branch_state[1])/threshold), branch_state[2]] = branch_node.getCost() + computeHeuristic(branch_state, goal_state)
+                    nodes.put((branch_node.getCost() + computeHeuristic(branch_state, goal_state), branch_node))
+        if (goal_reached): break
+
+
+        
+if __name__ == "__main__":
+    astar()

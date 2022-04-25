@@ -8,78 +8,81 @@
 #Project #3 Phase 2
 # Obstacles
 
-import numpy as np
-from numpy import linalg as LA
+class Obstacle:
+    def __init__(self, clearance):
+        self.x = 10
+        self.y = 10
+        self.clearance = clearance
+        self.robot_radius = 0.354 / 2
+        self.clearance = self.robot_radius + self.clearance
 
-sizex = 400
-sizey = 250
-robot_radius = 18   #178mm
-clearance = 5
-total_clearance = robot_radius + clearance
+        self.circle1_radius = 0.5
+        self.circle2_radius = 1
+        self.circle1_x_offset = 2
+        self.circle1_y_offset = 2
+        self.circle2_x_offset = 2
+        self.circle2_y_offset = 8
 
-#Boomerang shape==2 Triangles
-b_bottom_x=105
-b_bottom_y=100
-b_top_x=115
-b_top_y=210
+        self.square1_corner1_x = 0.25
+        self.square1_corner1_y = 4.25
+        self.square_side = 1.5
 
-b_middle_left_x=36
-b_middle_right_x=80
-b_middle_left_y=185
-b_middle_right_y=180
+        self.rect1_corner1_x = 3.75
+        self.rect1_corner1_y = 4.25
+        self.rect1_length = 2.5
+        self.rect1_width = 1.5
 
-left_x=b_middle_left_x-total_clearance
-left_y=b_middle_left_y
-triangle_top_x=b_top_x+total_clearance
-triangle_top_y=b_top_y+total_clearance
-right_x=b_middle_right_x+total_clearance
-right_y=b_middle_right_y
-triangle_bottom_x=b_bottom_x-total_clearance
-triangle_bottom_y=b_bottom_y-total_clearance
+        self.rect2_corner1_x = 7.25
+        self.rect2_corner1_y = 2
+        self.rect2_length = 1.5
+        self.rect2_width = 2
 
-#----Top Triangle of Boomerang--------
-boomerang_pts_top=np.array([[right_x, right_y],
-                        [triangle_top_x,triangle_top_y],
-                        [left_x,left_y]], np.int32)
+    def isInObstacleSpace(self, x, y):
 
-#----Bottom Triangle of Boomerang---------
-boomerang_pts_bottom=np.array([[left_x,left_y],
-                        [triangle_bottom_x,triangle_bottom_y],
-                        [right_x, right_y]], np.int32)
+        if (x < 0 or x >= 10 or y < 0 or y >= 10):
+          #print('Out of boundary !')
+          return 1
+        # circle1 obstacle
+        x_offset = self.circle1_x_offset
+        y_offset = self.circle1_y_offset
+        radius = self.circle1_radius + self.clearance
+        if ((x-x_offset)**2 + (y-y_offset)**2 <= radius**2):
+          #print('Inside circle 1; avoid')
+          return 1
 
-#circle values from map
-circle_diameter = 80 
-circle_offset_x = 300 #400-100
-circle_offset_y = 185 #250-65
-circle_radius = int(circle_diameter/2 + total_clearance)
+        # circle2 obstacle
+        x_offset = self.circle2_x_offset
+        y_offset = self.circle2_y_offset
+        radius = self.circle2_radius + self.clearance
+        if ((x-x_offset)**2 + (y-y_offset)**2 <= radius**2):
+          #print('Inside circle 2; avoid')
+          return 1
 
-#hexagon values from map
-hexagon_diameter=70
-hexagon_radius=int(hexagon_diameter/2+total_clearance)
+        # square obstacle
+        x1 = self.square1_corner1_x - self.clearance
+        x2 = x1 + self.square_side + 2*self.clearance
+        y1 = self.square1_corner1_y - self.clearance
+        y2 = y1 + self.square_side  + 2*self.clearance
+        if (x >= x1 and x <= x2 and y >= y1 and y <= y2):
+            #print('Inside square, avoid')
+            return 1
 
-hexagon_offset_x=200
-hexagon_offset_y=100
-hexagon_left_x= hexagon_offset_x-hexagon_radius
-hexagon_right_x= hexagon_offset_x+hexagon_radius
+        #rectangle obstacle 1
+        x1 = self.rect1_corner1_x - self.clearance
+        x2 = x1 + self.rect1_length + 2*self.clearance
+        y1 = self.rect1_corner1_y - self.clearance
+        y2 = y1 + self.rect1_width  + 2*self.clearance
+        if (x >= x1 and x <= x2 and y >= y1 and y <= y2):
+            #print('Inside rectangle 1, avoid')
+            return 1
 
-hexagon_r = int(hexagon_diameter/2)
-hexagon_corner=int(hexagon_diameter/4)
-hexagon_left_x=hexagon_offset_x-hexagon_r-total_clearance
-hexagon_upper_y=hexagon_offset_y+hexagon_corner
-hexagon_lower_y=hexagon_offset_y-hexagon_corner
-hexagon_right_x=hexagon_offset_x+hexagon_r+total_clearance
-hexagon_top_x=hexagon_offset_x
-hexagon_top_y=hexagon_offset_y+hexagon_r+total_clearance
-hexagon_bottom_x=hexagon_top_x
-hexagon_bottom_y=hexagon_offset_y-hexagon_r-total_clearance
+        #rectangle obstacle 2
+        x1 = self.rect2_corner1_x - self.clearance
+        x2 = x1 + self.rect2_length + 2*self.clearance
+        y1 = self.rect2_corner1_y - self.clearance
+        y2 = y1 + self.rect2_width  + 2*self.clearance
+        if (x >= x1 and x <= x2 and y >= y1 and y <= y2):
+            #print('Inside rectangle 1, avoid')
+            return 1
 
-hexagon_pts=np.array([[hexagon_left_x,hexagon_upper_y],
-                    [hexagon_top_x,hexagon_top_y],
-                    [hexagon_right_x,hexagon_upper_y],
-                    [hexagon_right_x,hexagon_lower_y],
-                    [hexagon_bottom_x,hexagon_bottom_y],
-                    [hexagon_left_x,hexagon_lower_y]], np.int32)
-
-
-# print("hexagon polypoints", hexagon_pts)
-# hexagon_pts = hexagon_pts.reshape((-1,1,2))
+        return 0
