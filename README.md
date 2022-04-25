@@ -23,17 +23,25 @@ UMD-CP PMRO. Spring 2022
 #3) Video for phase 1: "project3_jerry_pittman.avi"
 #********************************************
 
-# Phase 2 (holonomic constraints only)
+# Phase 2 Part 1 (non-holonomic constraints only)
 #********************************************
 # Requires the following in same folder to run:
 #1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
 
-# Generates the following outputs:
-#1) Initial Map Image : "initial_map.png"
-#2) Final Map Image (with path): "Final_map.png"
-#3) Video for phase 2: "project3_phase2_jerry_pittman.avi"
+to run: "python3 jerry_pittman.py"
 
+# Outputs:
+path_nodes.csv
+vel_points.csv
+path_nodes.csv
+
+# Phase 2 Part 2 Gazebo Simulation
 #********************************************
+# Requires the following in same folder to run:
+#1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
+#2) ROS files: 
+
+to run, commands in terminal:
 
 
 Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math, copy, timeit, queue
@@ -42,4 +50,6 @@ Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
 
 Video1 GDrive link: https://drive.google.com/file/d/1mVRywEdmyglWI77xN5PO4NGf_e3jIXUo/view?usp=sharing
 
-Video2 GDrive link: 
+Video2 (phase 2 part 2) GDrive link: https://drive.google.com/file/d/1zTlrJZids36evF3Qnpi_c_KSNqX0G8Cq/view?usp=sharing
+
+Video3 (phase 2 part 2) GDrive Link: 

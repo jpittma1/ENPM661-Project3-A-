@@ -18,9 +18,16 @@ UMD-CP PMRO. Spring 2022
 
 to run: "python3 jerry_pittman.py"
 
+# Outputs:
+path_nodes.csv
+vel_points.csv
+path_nodes.csv
 
 Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math
 
 Github Repo: https://github.com/jpittma1/ENPM661-Project3-Astar.git
 
-Video2 GDrive link: 
+Video (Phase 2 part1) GDrive link: https://drive.google.com/file/d/1zTlrJZids36evF3Qnpi_c_KSNqX0G8Cq/view?usp=sharing
+
+Video (part2) GDrive link: 
+
