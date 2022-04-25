@@ -1,7 +1,7 @@
 # ENPM661-Project3-A*
 A* implementation for a mobile robot for Spring 2022 ENPM661 course at UMD-CP
-# Phase 1: Non-holonomic constraints
-# Phase 2: Add holonomic constraints (differential Drive of Turtlebot)
+# Phase 1: holonomic constraints
+# Phase 2: Add non-holonomic constraints (differential Drive of Turtlebot) and simulate in Gazebo
 
 UMD-CP PMRO. Spring 2022
 #Section 0101
@@ -11,7 +11,7 @@ UMD-CP PMRO. Spring 2022
 #jpittma1@umd.edu and mkulk98@umd.edu 
 
 
-# Phase 2 (holonomic constraints only)
+# Phase 2 (non-holonomic constraints only)
 #********************************************
 # Requires the following in same folder to run:
 #1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
