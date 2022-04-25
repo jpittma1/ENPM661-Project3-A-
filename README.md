@@ -37,11 +37,18 @@ path_nodes.csv
 
 # Phase 2 Part 2 Gazebo Simulation
 #********************************************
-# Requires the following in same folder to run:
-#1) Python code: "functions.py", "Node.py", and "obstacles.py" and "jerry_pittman.py"
-#2) ROS files: 
+#1) ROS files: turtleastar_ws and its subfolders built as a catkin workspace
 
-to run, commands in terminal:
+to run, commands in terminal: or Gazebo: Build the astar_ws using catkin build (may require catkin clean - b)
+
+	Source the workspace 
+		source ~/astar_ws/devel/setup.bash
+
+	Launch the file:
+
+	roslaunch astar_turtlebot3 enviroment.launch x_init:=5 y_init:=3 theta_init:=0 x_final:=9 y_final:=9 rpm1:=15 rpm2:=10
+	roslaunch astar_turtlebot3 enviroment.launch x_init:=6 y_init:=8 theta_init:=0 x_final:=9 y_final:=9 rpm1:=15 rpm2:=10
+	roslaunch astar_turtlebot3 enviroment.launch x_init:=8 y_init:=5 theta_init:=0 x_final:=7 y_final:=7 rpm1:=15 rpm2:=10
 
 
 Function modules used: numpy, cv2, scipy, matplotlib.pyplot, sys, math, copy, timeit, queue
